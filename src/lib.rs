@@ -44,7 +44,7 @@ use serde::{Deserialize, Serialize};
 use std::{fs, io, path::PathBuf, path::Path, collections::HashMap, fmt};
 use reqwest::blocking::Client;
 
-#[derive(Serialize, Deserialize, Clone, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct WorkshopItem {
     pub result: i8,
     pub publishedfileid: String,
@@ -66,7 +66,7 @@ pub struct WorkshopItem {
     pub tags: Vec<WorkshopItemTag>
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct WorkshopSearchItem {
     pub result: i8,
     pub publishedfileid: String,
@@ -94,19 +94,19 @@ impl fmt::Display for WorkshopItem {
     }
 }
 
-#[derive(Serialize, Deserialize, Clone, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct WorkshopItemTag {
     tag: String
 }
 
 // WORKSHOP ITEMS:
 #[doc(hidden)]
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 struct WSItemResponse<T> {
     response: WSItemResponseBody<T>
 }
 #[doc(hidden)]
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 struct WSItemResponseBody<T> {
     publishedfiledetails: Vec<T>
 }
