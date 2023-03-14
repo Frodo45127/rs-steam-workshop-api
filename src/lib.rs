@@ -48,49 +48,61 @@ use reqwest::blocking::Client;
 pub struct WorkshopItem {
     pub result: i8,
     pub publishedfileid: String,
-    pub creator: String,
-    pub creator_app_id: u32,
-    pub consumer_app_id: u32,
-    pub filename: String,
-    pub file_size: u64,
-    pub file_url: String,
-    pub preview_url: String,
-    pub hcontent_preview: String,
-    pub title: String,
-    pub description: String,
-    pub time_created: usize,
-    pub time_updated: usize,
-    pub subscriptions: u32,
-    pub favorited: u32,
-    pub views: u32,
-    pub tags: Vec<WorkshopItemTag>
+    pub creator: Option<String>,
+    pub creator_app_id: Option<u32>,
+    pub consumer_app_id: Option<u32>,
+    pub filename: Option<String>,
+    pub file_size: Option<u64>,
+    pub file_url: Option<String>,
+    pub hcontent_file: Option<String>,
+    pub preview_url: Option<String>,
+    pub hcontent_preview: Option<String>,
+    pub title: Option<String>,
+    pub description: Option<String>,
+    pub time_created: Option<usize>,
+    pub time_updated: Option<usize>,
+    pub visibility: Option<u32>,
+    pub banned: Option<u32>,
+    pub ban_reason: Option<String>,
+    pub subscriptions: Option<u32>,
+    pub favorited: Option<u32>,
+    pub lifetime_subscriptions: Option<u32>,
+    pub lifetime_favorited: Option<u32>,
+    pub views: Option<u32>,
+    pub tags: Option<Vec<WorkshopItemTag>>
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct WorkshopSearchItem {
     pub result: i8,
     pub publishedfileid: String,
-    pub creator: String,
-    pub creator_appid: u32,
-    pub consumer_appid: u32,
-    pub filename: String,
-    pub file_size: String,
-    pub file_url: String,
-    pub preview_url: String,
-    pub hcontent_preview: String,
-    pub title: String,
-    pub file_description: String,
-    pub time_created: usize,
-    pub time_updated: usize,
-    pub subscriptions: u32,
-    pub favorited: u32,
-    pub views: u32,
-    pub tags: Vec<WorkshopItemTag>
+    pub creator: Option<String>,
+    pub creator_app_id: Option<u32>,
+    pub consumer_app_id: Option<u32>,
+    pub filename: Option<String>,
+    pub file_size: Option<u64>,
+    pub file_url: Option<String>,
+    pub hcontent_file: Option<String>,
+    pub preview_url: Option<String>,
+    pub hcontent_preview: Option<String>,
+    pub title: Option<String>,
+    pub description: Option<String>,
+    pub time_created: Option<usize>,
+    pub time_updated: Option<usize>,
+    pub visibility: Option<u32>,
+    pub banned: Option<u32>,
+    pub ban_reason: Option<String>,
+    pub subscriptions: Option<u32>,
+    pub favorited: Option<u32>,
+    pub lifetime_subscriptions: Option<u32>,
+    pub lifetime_favorited: Option<u32>,
+    pub views: Option<u32>,
+    pub tags: Option<Vec<WorkshopItemTag>>
 }
 
 impl fmt::Display for WorkshopItem {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{} - {}", self.title, self.publishedfileid)
+        write!(f, "{} - {}", self.title.clone().unwrap_or("No Title".to_owned()), self.publishedfileid)
     }
 }
 
@@ -156,65 +168,65 @@ struct WSCollectionChildren {
 // MISC
 
 
-
-
-impl WorkshopSearchItem {
-    /// Converts from a WorkshopSearchItem to a WorkshopItem
-    pub fn to_item(&self) -> WorkshopItem {
-        WorkshopItem {
-            result: self.result.clone(),
-            publishedfileid: self.publishedfileid.clone(),
-            creator: self.creator.clone(),
-            creator_app_id: self.creator_appid.clone(),
-            consumer_app_id: self.consumer_appid.clone(),
-            filename: self.filename.clone(),
-            file_size: self.file_size.parse().unwrap(),
-            file_url: self.file_url.clone(),
-            preview_url: self.preview_url.clone(),
-            hcontent_preview: self.hcontent_preview.clone(),
-            title: self.title.clone(),
-            description: self.file_description.clone(),
-            time_created: self.time_created,
-            time_updated: self.time_updated,
-            subscriptions: self.subscriptions,
-            favorited: self.favorited,
-            views: self.views,
-            tags: self.tags.clone(),
-        }
-    }
-    /// Converts to a WorkshopSearchItem from a WorkshopItem
-    pub fn from_item(item: &WorkshopItem) -> WorkshopSearchItem {
-        WorkshopSearchItem {
-            result: item.result.clone(),
-            publishedfileid: item.publishedfileid.clone(),
-            creator: item.creator.clone(),
-            creator_appid: item.creator_app_id.clone(),
-            consumer_appid: item.consumer_app_id.clone(),
-            filename: item.filename.clone(),
-            file_size: item.file_size.to_string(),
-            file_url: item.file_url.clone(),
-            preview_url: item.preview_url.clone(),
-            hcontent_preview: item.hcontent_preview.clone(),
-            title: item.title.clone(),
-            file_description: item.description.clone(),
-            time_created: item.time_created,
-            time_updated: item.time_updated,
-            subscriptions: item.subscriptions,
-            favorited: item.favorited,
-            views: item.views,
-            tags: item.tags.clone(),
+impl From<&WorkshopItem> for WorkshopSearchItem {
+    fn from(value: &WorkshopItem) -> Self {
+        Self {
+            result: value.result.clone(),
+            publishedfileid: value.publishedfileid.clone(),
+            creator: value.creator.clone(),
+            creator_app_id: value.creator_app_id.clone(),
+            consumer_app_id: value.consumer_app_id.clone(),
+            filename: value.filename.clone(),
+            file_size: value.file_size,
+            file_url: value.file_url.clone(),
+            preview_url: value.preview_url.clone(),
+            hcontent_file: value.hcontent_file.clone(),
+            hcontent_preview: value.hcontent_preview.clone(),
+            title: value.title.clone(),
+            description: value.description.clone(),
+            time_created: value.time_created,
+            time_updated: value.time_updated,
+            visibility: value.visibility.clone(),
+            banned: value.banned.clone(),
+            ban_reason: value.ban_reason.clone(),
+            subscriptions: value.subscriptions,
+            favorited: value.favorited,
+            lifetime_subscriptions: value.lifetime_subscriptions.clone(),
+            lifetime_favorited: value.lifetime_favorited.clone(),
+            views: value.views,
+            tags: value.tags.clone(),
         }
     }
 }
 
-impl WorkshopItem {
-    /// Converts from a WorkshopItem to a WorkshopSearchItem
-    pub fn to_search_item(&self) -> WorkshopSearchItem {
-        WorkshopSearchItem::from_item(&self)
-    }
-    /// Converts to a WorkshopItem from a WorkshopSearchItem
-    pub fn from_search_item(sitem: &WorkshopSearchItem) -> WorkshopItem {
-        sitem.to_item()
+impl From<&WorkshopSearchItem> for WorkshopItem {
+    fn from(value: &WorkshopSearchItem) -> Self {
+        Self {
+            result: value.result.clone(),
+            publishedfileid: value.publishedfileid.clone(),
+            creator: value.creator.clone(),
+            creator_app_id: value.creator_app_id.clone(),
+            consumer_app_id: value.consumer_app_id.clone(),
+            filename: value.filename.clone(),
+            file_size: value.file_size,
+            file_url: value.file_url.clone(),
+            preview_url: value.preview_url.clone(),
+            hcontent_file: value.hcontent_file.clone(),
+            hcontent_preview: value.hcontent_preview.clone(),
+            title: value.title.clone(),
+            description: value.description.clone(),
+            time_created: value.time_created,
+            time_updated: value.time_updated,
+            visibility: value.visibility.clone(),
+            banned: value.banned.clone(),
+            ban_reason: value.ban_reason.clone(),
+            subscriptions: value.subscriptions,
+            favorited: value.favorited,
+            lifetime_subscriptions: value.lifetime_subscriptions.clone(),
+            lifetime_favorited: value.lifetime_favorited.clone(),
+            views: value.views,
+            tags: value.tags.clone(),
+        }
     }
 }
 
