@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 
 pub mod i_published_file_service;
 pub mod i_steam_remote_storage;
+pub mod i_steam_user;
 
 
 #[derive(Debug, Getters, Serialize, Deserialize, Clone, PartialEq)]
